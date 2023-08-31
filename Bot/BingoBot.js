@@ -12,10 +12,11 @@
 let searchInput = document.getElementById("sb_form_q");
 let button = document.getElementById("search_icon");
 let links = document.links
-let keywords = ["10 самых популярных шрифтов от Google",
-               // "Отключение редакций и ревизий в WordPress",
-               // "Вывод произвольных типов записей и полей в WordPress"
-               ];
+let keywords = [
+  //"10 самых популярных шрифтов от Google",
+  "Отключение редакций и ревизий в WordPress",
+  "Вывод произвольных типов записей и полей в WordPress"
+];
 let keyword = keywords[getRandom(0, keywords.length)];
 
 
@@ -33,7 +34,8 @@ if(button != undefined) {
   for (let i = 0; i < links.length; i++) {
     if(links[i].href.indexOf("napli.ru") != -1) {
       console.log("Got it " + links[i]);
-      links[i].click();
+      let link = links[i];
+      setTimeout(() => {link.click();}, getRandom(1000, 3000));
       break;
     }
   }
