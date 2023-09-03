@@ -6,6 +6,8 @@
 // @author       You
 // @match        https://www.bing.com/*
 // @match        https://napli.ru/*
+// @match        https://kiteuniverse.ru/*
+// @match        https://motoreforma.com/*
 // @icon         data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==
 // @grant        none
 // ==/UserScript==
@@ -14,13 +16,31 @@ let searchInput = document.getElementById("sb_form_q");
 let button = document.getElementById("search_icon");
 let links = document.links
 let buttonNext = document.querySelector('[title="Следующая страница"]');
-let keywords = ["10 популярных шрифтов Google",
-                "Отключение редакций и ревизий",
-                "Вывод произвольных типов записей и полей wp",
-                "Конвертация Notion в Obsidian",
-                "FFmpeg",
-                "VSCode плагины"];
+let sites = {
+  "napli.ru":["10 популярных шрифтов Google",
+              "Отключение редакций и ревизий",
+              "Вывод произвольных типов записей и полей wp",
+              "Конвертация Notion в Obsidian",
+              "FFmpeg",
+              "VSCode плагины"],
+  "kiteuniverse.ru":["Kite Universe Россия",
+                     "Красота. Грация. Интеллект",
+                     "Фестиваль воздушных змеев"],
+  "motoreforma.com":["прошивки для CAN-AM",
+                     "тюнинг Maverik X3",
+                     "тюнинг для квадроциклов CAN-AM"]
+};
+let site = Object.keys(sites)[getRandom(0, Object.keys(sites).length)];
+let keywords = sites[site];
 let keyword = keywords[getRandom(0, keywords.length)];
+
+if(button != undefined) {
+  document.cookie = `site=${site}`;
+} else if (location.hostname == "www.bing.com"){
+  site = getCookie("site");
+} else {
+  site = location.hostname;
+}
 
 if(button != undefined) {
   let i = 0;
@@ -32,24 +52,24 @@ if(button != undefined) {
       button.click();
     };
   }, 500);
-} else if (location.hostname == "napli.ru") {
-  console.log("Target site reached.");
+} else if (location.hostname == site) {
+  console.log("Target reached.");
   setInterval(() => {
     let index = getRandom(0, links.length);
     if (getRandom(0, 101) >= 75) {
       location.href = "https://www.bing.com/";
     }
     if (links.length == 0) {
-      location.href = "https://napli.ru/";
+      location.href = site;
     }
-    if(links[index].href.includes("napli.ru")) {
+    if(links[index].href.includes(site)) {
       links[index].click();
     }
   }, getRandom(3000, 5000))
 } else {
   let nextBingPage = true;
   for (let i = 0; i < links.length; i++) {
-    if(links[i].href.indexOf("napli.ru") != -1) {
+    if(links[i].href.indexOf(site) != -1) {
       console.log("Got link " + links[i]);
       let link = links[i];
       nextBingPage = false;
@@ -76,4 +96,11 @@ if(button != undefined) {
 
 function getRandom(min, max) {
   return Math.floor(Math.random() * (max - min) + min);
+}
+
+function getCookie(name) {
+  let matches = document.cookie.match(new RegExp(
+    "(?:^|; )" + name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') + "=([^;]*)"
+  ));
+  return matches ? decodeURIComponent(matches[1]) : undefined;
 }
