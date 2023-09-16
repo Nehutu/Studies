@@ -1,0 +1,179 @@
+<!-- ================ start banner area ================= -->
+<section class="blog-banner-area" id="category">
+  <div class="container h-100">
+    <div class="blog-banner">
+      <div class="text-center">
+        <h1>Register</h1>
+        <nav aria-label="breadcrumb" class="banner-breadcrumb">
+          <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/">Home</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Register</li>
+          </ol>
+        </nav>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- ================ end banner area ================= -->
+
+<!--================Login Box Area =================-->
+<section class="login_box_area section-margin">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-6">
+        <div class="login_box_img">
+          <div class="hover">
+            <h4>Already have an account?</h4>
+            <p>Please, login now!</p>
+            <a class="button button-account" href="/auth">Login</a>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-6">
+        <div class="login_form_inner register_form_inner">
+          <h3>Create an account</h3>
+          <form class="row login_form" onsubmit="sendForm(this); return false;">
+            <div class="col-md-12 form-group">
+              <input
+                type="text"
+                class="form-control"
+                name="name"
+                placeholder="Name"
+                required
+                onfocus="this.placeholder = ''"
+                onblur="this.placeholder = 'Name'"
+                autocomplete="name"
+                minlength="3"
+              />
+            </div>
+            <div class="col-md-12 form-group">
+              <input
+                type="text"
+                class="form-control"
+                name="surname"
+                placeholder="Surname"
+                required
+                onfocus="this.placeholder = ''"
+                onblur="this.placeholder = 'Surname'"
+                autocomplete="family-name"
+                minlength="3"
+              />
+            </div>
+            <div class="col-md-12 form-group">
+              <input
+                type="email"
+                class="form-control"
+                name="email"
+                placeholder="E-mail Address"
+                required
+                onfocus="this.placeholder = ''"
+                onblur="this.placeholder = 'E-mail Address'"
+                autocomplete="email"
+              />
+            </div>
+            <div class="col-md-12 form-group">
+              <input
+                type="password"
+                class="form-control"
+                name="pass"
+                placeholder="Password"
+                required
+                onfocus="this.placeholder = ''"
+                onblur="this.placeholder = 'Password'"
+                autocomplete="new-password"
+                minlength="3"
+              />
+            </div>
+            <div class="col-md-12 form-group">
+              <div class="creat_account">
+                <input type="checkbox" id="f-option2" name="selector" />
+                <label for="f-option2">Personal data agreement</label>
+              </div>
+            </div>
+            <div class="col-md-12 form-group">
+              <button
+                type="submit"
+                value="submit"
+                class="button button-register w-100"
+              >
+                Register
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<!--================End Login Box Area =================-->
+
+<!-- Модальное окно -->
+<div
+  class="modal fade"
+  id="myModal"
+  data-backdrop="static"
+  data-keyboard="false"
+  tabindex="-1"
+  aria-labelledby="staticBackdropLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="staticBackdropLabel">
+          Registration successful!
+        </h5>
+      </div>
+      <div class="modal-body">You will be redirected to the Login page.</div>
+    </div>
+  </div>
+</div>
+
+<!-- Модальное окно -->
+<div
+  class="modal fade"
+  id="modalUser"
+  data-backdrop="static"
+  data-keyboard="false"
+  tabindex="-1"
+  aria-labelledby="staticBackdrop"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="staticBackdrop">User alredy exists.</h5>
+      </div>
+      <div class="modal-body">
+        Please, provide data that has not been used to register on this
+        platform.
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-dismiss="modal">
+          Ok
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  async function sendForm(form) {
+    let formData = new FormData(form);
+
+    let response = await fetch("addUser", {
+      method: "POST",
+      body: formData,
+    });
+    let outcome = await response.json();
+
+    if (outcome.result == "success") {
+      $("#myModal").modal("show");
+      setTimeout(() => {
+        location.href = "auth";
+      }, 3000);
+    } else if (outcome.result == "exist") {
+      $("#modalUser").modal("show");
+    }
+  }
+</script>
